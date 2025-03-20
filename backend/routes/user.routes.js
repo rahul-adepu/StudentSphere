@@ -17,11 +17,8 @@ userRouter.post('/register', async (req, res) => {
         const createUser = await User.create({ name, mobile, role, password });
         res.send("User Created Successfully")
 
-        const findUserIdByMobile = await User.findOne({ mobile })
-        console.log(findUserIdByMobile)
-
         if (role == "student") {
-            const studentDetails = await Student.create({ standard, admissionNo, studentId: findUserIdByMobile._id })
+            const studentDetails = await Student.create({ standard, admissionNo, studentId: createUser._id })
             console.log("Student details inserted Successfully")
         }
     } catch (error) {
