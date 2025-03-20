@@ -1,3 +1,4 @@
+const Student = require('../models/student.model');
 const User = require('../models/user.model');
 const express = require('express');
 
@@ -9,11 +10,20 @@ userRouter.get('/', (req, res) => {
 })
 
 userRouter.post('/register', async (req, res) => {
-    const { name, mobile, role, password } = req.body;
+    const { name, mobile, role, password, standard, admissionNo } = req.body;
 
     try {
-        const createUser = await User.create(req.body);
+
+        const createUser = await User.create({ name, mobile, role, password });
         res.send("User Created Successfully")
+
+        const findUserIdByMobile = await User.findOne({ mobile })
+        console.log(findUserIdByMobile)
+
+        if (role == "student") {
+            const studentDetails = await Student.create({ standard, admissionNo, studentId: findUserIdByMobile._id })
+            console.log("Student details inserted Successfully")
+        }
     } catch (error) {
         res.send(error.message)
     }
