@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const userSchema = mongoose.Schema({
     name: String,
     mobile: Number,
-    role: { type: String, enum: ["student", "admin", "Class teacher"], default: "student" },
+    role: { type: String, enum: ["student", "admin", "class teacher"], default: "student" },
     password: String
 })
 

@@ -1,3 +1,4 @@
+const Admission = require('../models/admission.model');
 const Student = require('../models/student.model');
 const User = require('../models/user.model');
 const express = require('express');
@@ -19,8 +20,10 @@ userRouter.post('/register', async (req, res) => {
 
         if (role == "student") {
             const studentDetails = await Student.create({ standard, admissionNo, studentId: createUser._id })
+            const AdmissionDetails = await Admission.create({ admissionNo, studentId: createUser._id })
             console.log("Student details inserted Successfully")
         }
+
     } catch (error) {
         res.send(error.message)
     }
