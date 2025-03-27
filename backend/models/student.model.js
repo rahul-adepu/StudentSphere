@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const studentSchema = mongoose.Schema({
     standard: Number,
-    admissionNo: Number,
+    admissionNo: String,
+    classTeacherMobile: Number,
     studentId: String
 })
 

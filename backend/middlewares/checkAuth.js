@@ -1,35 +1,28 @@
 const jwt = require("jsonwebtoken");
-const ClassTeacher = require("../models/classteacher.model");
 
+const authorizeRoles = (allowedRoles = []) => {
+    return (req, res, next) => {
+        const token = req.headers.authorization?.split(" ")[1];
 
-const checkAuth = async (req, res, next) => {
-    // console.log(req.headers)
-    const token = req.headers?.authorization?.split(" ")[1];
-    // console.log(token);
+        if (!token) {
+            return res.status(401).json({ message: "Please Login" })
+        }
 
-    if (!token) {
-        return res.send("Please Login")
-    }
-    else {
-        const output = jwt.verify(token, 'rahul', function (err, decoded) {
-            if (decoded) {
-                return decoded
+        try {
+            const decoded = jwt.verify(token, 'rahul')
+            req.user = decoded;
+
+            if (!allowedRoles.includes(decoded.role)) {
+                return res.status(403).json({ message: "Unauthorized!!! You Don't have access to this route. Please contact class teacher for registration" })
             }
-            else return res.send(err.message)
-        });
-        // console.log(output)
-        if (output.role == "class teacher") {
-            const fromClassTeacherCollection = await ClassTeacher.findOne({ classTeacherId: output.userId })
-            // console.log(fromClassTeacherCollection)
-            req.body = { ...output, standard: fromClassTeacherCollection.standard }
+
             next();
-        }
-        else {
-            return res.send("You are Unauthorized")
+
+        } catch (error) {
+            return res.status(401).json({ message: "Invalid token" })
         }
     }
-
 }
 
 
-module.exports = checkAuth
+module.exports = authorizeRoles;

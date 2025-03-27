@@ -7,7 +7,7 @@ const app = express();
 
 
 app.use(express.json())
-app.use('/user', userRouter);
+app.use('/', userRouter);
 app.use('/student', studentRoutes);
 app.use('/classTeacher', classTeacherRoutes)
 
